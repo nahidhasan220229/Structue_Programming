@@ -1,5 +1,6 @@
 //Student ID: 220229
 //Project 1:
+//Traverse every node with visa 
 
 
 #include <stdio.h>
