@@ -31,7 +31,7 @@ int addNode (struct Node * p, int nid, int count)
     return ncount;
 }
 
-void addAdjacent (struct Node *p, int nid1, int nid2, int cost, int count)
+void addAdjacent (struct Node *p, int nid1, int nid2, int cost, int count)                //
 {
     int i =0, index;
     for (i=0;i<count;i++)
