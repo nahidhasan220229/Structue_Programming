@@ -31,7 +31,7 @@ int addNode (struct Node * p, int nid, int count)
     return ncount;
 }
 
-void addAdjacent (struct Node *p, int nid1, int nid2, int cost, int count)                //
+void addAdjacent (struct Node *p, int nid1, int nid2, int cost, int count)                //flag for check node path, pp for path count
 {
     int i =0, index;
     for (i=0;i<count;i++)
@@ -48,7 +48,7 @@ void addAdjacent (struct Node *p, int nid1, int nid2, int cost, int count)      
     }
 }
 
-int added (int * list, int lcount, int nid)
+int added (int * list, int lcount, int nid)                                            //add node to node
 {
     int i =0;
     for (i=0;i<lcount;i++)
@@ -59,7 +59,7 @@ int added (int * list, int lcount, int nid)
 }
 
 
-void findpath (struct Node * p, int count, int start, int end, int * list, int *clist, int lcount)
+void findpath (struct Node * p, int count, int start, int end, int * list, int *clist, int lcount)            //find every path of the graph
 {
     int index = 0, i=0;
    
@@ -100,14 +100,14 @@ void findpath (struct Node * p, int count, int start, int end, int * list, int *
 
 //finding all tringle
 
-void triangle(struct Node *nodes, int total_path)
+void triangle(struct Node *nodes, int total_path)                                    
 {
     for(int i=0; i<total_path; i++){
         for(int j=i+1; j<total_path; j++){
-            if(Adj_list[j][0]==Adj_list[i][0])
+            if(Adj_list[j][0]==Adj_list[i][0])                                        //check every first elemnt of the list 
             {
-                for(int k=i+1; k<total_path; k++)
-                {
+                for(int k=i+1; k<total_path; k++)                                    //check every second elemnt of the list
+                {        
                     if(Adj_list[j][1]==Adj_list[k][0])
                     {
                         if(Adj_list[k][1]==Adj_list[i][1])
