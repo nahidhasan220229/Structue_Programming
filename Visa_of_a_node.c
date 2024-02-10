@@ -5,7 +5,7 @@
 
 #include <stdio.h>
 
-int flag[100000]= {0},pp=0;
+int flag[100000]= {0},pp=0;                                                    //flag for check node path, pp for path count
 
 struct Node
 {
@@ -15,7 +15,7 @@ struct Node
     int costs[10];
 };
 
-int addNode (struct Node * p, int nid, int count)
+int addNode (struct Node * p, int nid, int count)                                //add node to node
 {
     int i =0, ncount = count;
     for (i=0;i<count;i++)
@@ -34,7 +34,7 @@ int addNode (struct Node * p, int nid, int count)
     return ncount;
 }
 
-void addAdjacent (struct Node *p, int nid1, int nid2, int cost, int count)
+void addAdjacent (struct Node *p, int nid1, int nid2, int cost, int count)                                //adjacent node list
 {
     int i =0, index;
     for (i=0;i<count;i++)
@@ -51,7 +51,7 @@ void addAdjacent (struct Node *p, int nid1, int nid2, int cost, int count)
     }
 }
 
-int added (int * list, int lcount, int nid)
+int added (int * list, int lcount, int nid)                            //check the node with previous element
 {
     int i =0;
     for (i=0;i<lcount;i++)
@@ -62,7 +62,7 @@ int added (int * list, int lcount, int nid)
 }
 
 
-void findpath (struct Node * p, int count, int start, int end, int * list, int *clist, int lcount)
+void findpath (struct Node * p, int count, int start, int end, int * list, int *clist, int lcount)            //find every path of the graph
 {
     int index = 0;
    
