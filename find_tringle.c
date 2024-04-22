@@ -1,29 +1,33 @@
-//Student ID: 220229
-//Project 2:
-//Finding all tringle in a list
-
+//*************************************************************************
+// TITLE : A C PROGRAMME TO FIND EVERY TRINGLE OF A GRAPH
+// AUTHOR : NAHID HASAN , UNDERGRADUATE STUDENT (2ND YEAR) Of KHULNA UNIVERSITY
+//*************************************************************************
 
 #include <stdio.h>
-int num_tringle=0, path=0, Adj_list[100000][2];               //number of tringle,total path,list of adjacent node......
 
-struct Node
-{
+int num_triangles = 0; // Counter for the number of triangles found
+int path = 0; // Total number of paths in the graph
+int Adj_list[100000][2]; // List to store edges in the graph
+
+// Define Structure for a Node in the Graph
+struct Node {
     int nodeid;
     int adjcount;
     int adjs[10];
     int costs[10];
 };
 
-int addNode (struct Node * p, int nid, int count)
-{
-    path++;                                                    //count path for two times for each node......
-    int i =0, ncount = count;
-    for (i=0;i<count;i++)
-    {
-        if (p[i].nodeid == nid) { break; }
+// Function to add a new node to the graph
+int addNode(struct Node *p, int nid, int count) {
+    // Increment path count for each node added
+    path++; 
+    int i = 0, ncount = count;
+    for (i = 0; i < count; i++) {
+        if (p[i].nodeid == nid) {
+            break;
+        }
     }
-    if (i == count)
-    {
+    if (i == count) {
         p[i].nodeid = nid;
         p[i].adjcount = 0;
         ncount++;
@@ -31,118 +35,95 @@ int addNode (struct Node * p, int nid, int count)
     return ncount;
 }
 
-void addAdjacent (struct Node *p, int nid1, int nid2, int cost, int count)                //flag for check node path, pp for path count
-{
-    int i =0, index;
-    for (i=0;i<count;i++)
-    {
-        if (p[i].nodeid == nid1)
-        {
+// Function to add an adjacent node to a given node in the graph
+void addAdjacent(struct Node *p, int nid1, int nid2, int cost, int count) {
+    int i = 0, index;
+    for (i = 0; i < count; i++) {
+        if (p[i].nodeid == nid1) {
             int c = p[i].adjcount;
             p[i].adjs[c] = nid2;
             p[i].costs[c] = cost;
-            p[i].adjcount = c+1;
-           
+            p[i].adjcount = c + 1;
             break;
         }
     }
 }
 
-int added (int * list, int lcount, int nid)                                            //add node to node
-{
-    int i =0;
-    for (i=0;i<lcount;i++)
-    {
-        if (list[i] == nid) { return 1; }
+// Function to check if a node is already present in a list
+int isNodeAdded(int *list, int lcount, int nid) {
+    int i = 0;
+    for (i = 0; i < lcount; i++) {
+        if (list[i] == nid) {
+            return 1;
+        }
     }
     return 0;
 }
 
-
-void findpath (struct Node * p, int count, int start, int end, int * list, int *clist, int lcount)            //find every path of the graph
-{
-    int index = 0, i=0;
+// Recursive function to find all paths from start to end node
+void findPaths(struct Node *p, int count, int start, int end, int *list, int *clist, int lcount) {
+    int index = 0, i = 0;
    
-   
-    //check if list contains the end node
-    if (list[lcount-1] == end)
-    {
+    // Check if list contains the end node
+    if (list[lcount - 1] == end) {
         int tcost = 0;
-        for (i=0;i<lcount;i++)
-        {
-            //printf (" %d ", list[i]);
+        for (i = 0; i < lcount; i++) {
             tcost += clist[i];
         }
-        //printf (" cost = %d", tcost);
         return;
     }
    
-    for (i=0;i<count;i++)
-    {
-        if (p[i].nodeid == start) { index = i; break; }
+    for (i = 0; i < count; i++) {
+        if (p[i].nodeid == start) {
+            index = i;
+            break;
+        }
     }
    
-    for (i=0;i<p[index].adjcount;i++)
-    {
-        int a = added (list, lcount, p[index].adjs[i]);
-        if (a == 0)
-        {
+    for (i = 0; i < p[index].adjcount; i++) {
+        int a = isNodeAdded(list, lcount, p[index].adjs[i]);
+        if (a == 0) {
             list[lcount] = p[index].adjs[i];
             clist[lcount] = p[index].costs[i];
             lcount++;
            
-            findpath (p, count, p[index].adjs[i], end, list, clist, lcount);
+            findPaths(p, count, p[index].adjs[i], end, list, clist, lcount);
             lcount--;
         }
     }
 }
 
+// Function to find all triangles in the graph
 
-//finding all tringle
-
-void triangle(struct Node *nodes, int total_path)                                    
-{
-    for(int i=0; i<total_path; i++){
-        for(int j=i+1; j<total_path; j++){
-            if(Adj_list[j][0]==Adj_list[i][0])                                        //check every first elemnt of the list 
-            {
-                for(int k=i+1; k<total_path; k++)                                    //check every second elemnt of the list
-                {        
-                    if(Adj_list[j][1]==Adj_list[k][0])
-                    {
-                        if(Adj_list[k][1]==Adj_list[i][1])
-                        {
-                            num_tringle++;
-                            printf("Tringle no.%d is: %d %d %d\n",num_tringle,Adj_list[i][0], Adj_list[i][1], Adj_list[k][0]);
+//In the function nexted loop running for comparing every node. And after that we can fing the number of tringle.
+void findTriangles(struct Node *nodes, int total_paths) {
+    for (int i = 0; i < total_paths; i++) {
+        for (int j = i + 1; j < total_paths; j++) {
+            if (Adj_list[j][0] == Adj_list[i][0]) {
+                for (int k = i + 1; k < total_paths; k++) {
+                    if (Adj_list[j][1] == Adj_list[k][0]) {
+                        if (Adj_list[k][1] == Adj_list[i][1]) {
+                            num_triangles++;
+                            printf("Triangle no. %d: %d %d %d\n", num_triangles, Adj_list[i][0], Adj_list[i][1], Adj_list[k][0]);
                         }
-                    }
-                    else if(Adj_list[j][1]==Adj_list[k][1])
-                    {
-                        if(Adj_list[k][0]==Adj_list[i][1])
-                        {
-                            num_tringle++,
-                            printf("Tringle no.%d is: %d %d %d\n",num_tringle,Adj_list[i][0], Adj_list[i][1], Adj_list[k][1]);
+                    } else if (Adj_list[j][1] == Adj_list[k][1]) {
+                        if (Adj_list[k][0] == Adj_list[i][1]) {
+                            num_triangles++;
+                            printf("Triangle no. %d: %d %d %d\n", num_triangles, Adj_list[i][0], Adj_list[i][1], Adj_list[k][1]);
                         }
                     }
                 }
-            }
-            else if(Adj_list[j][1]==Adj_list[i][0])
-            {
-                for(int k=i+1; k<total_path; k++){
-                    if(Adj_list[j][0]==Adj_list[k][0])
-                    {
-                        if(Adj_list[k][1]==Adj_list[i][1])
-                        {
-                            num_tringle++;
-                            printf("Tringle no.%d is: %d %d %d\n",num_tringle,Adj_list[i][0], Adj_list[i][1], Adj_list[k][0]);
+            } else if (Adj_list[j][1] == Adj_list[i][0]) {
+                for (int k = i + 1; k < total_paths; k++) {
+                    if (Adj_list[j][0] == Adj_list[k][0]) {
+                        if (Adj_list[k][1] == Adj_list[i][1]) {
+                            num_triangles++;
+                            printf("Triangle no. %d: %d %d %d\n", num_triangles, Adj_list[i][0], Adj_list[i][1], Adj_list[k][0]);
                         }
-                    }
-                    else if(Adj_list[j][0]==Adj_list[k][1])
-                    {
-                        if(Adj_list[k][0]==Adj_list[i][1])
-                        {
-                            num_tringle++;
-                            printf("Tringle no.%d is: %d %d %d\n",num_tringle,Adj_list[i][0], Adj_list[i][1], Adj_list[k][1]);
+                    } else if (Adj_list[j][0] == Adj_list[k][1]) {
+                        if (Adj_list[k][0] == Adj_list[i][1]) {
+                            num_triangles++;
+                            printf("Triangle no. %d: %d %d %d\n", num_triangles, Adj_list[i][0], Adj_list[i][1], Adj_list[k][1]);
                         }
                     }
                 }
@@ -151,48 +132,51 @@ void triangle(struct Node *nodes, int total_path)
     }
 }
 
-
-
 int main() {
-   
     struct Node nodes[50];
-    int nodecount = 0;
-    int n1=0, n2=0, c = 0,x=0;
+    int node_count = 0;
+    int n1 = 0, n2 = 0, c = 0, x = 0;
    
-    while (1)
-    {
-        printf ("n1, n2, cost ? ");
+    // Input edges until user enters -9
+    while (1) {
+        printf("Enter n1, n2, cost (Enter -9 to stop): ");
         scanf("%d %d %d", &n1, &n2, &c);
-        if (n1 == -9 || n2 == -9 || c== -9) {break;}
+        if (n1 == -9 || n2 == -9 || c == -9) {
+            break;
+        }
 
-        Adj_list[x][0]= n1;
-        Adj_list[x][1]= n2;
+        // Store edges in Adj_list
+        Adj_list[x][0] = n1;
+        Adj_list[x][1] = n2;
         x++;
     
-        nodecount = addNode (&nodes[0], n1, nodecount);
-        nodecount = addNode (&nodes[0], n2, nodecount);
-       
-        addAdjacent (&nodes[0], n1, n2, c, nodecount);
-        addAdjacent (&nodes[0], n2, n1, c, nodecount);
+        // Add nodes and edges to the graph
+        node_count = addNode(&nodes[0], n1, node_count);
+        node_count = addNode(&nodes[0], n2, node_count);
+        addAdjacent(&nodes[0], n1, n2, c, node_count);
+        addAdjacent(&nodes[0], n2, n1, c, node_count);
     }
    
     int start, end;
-    printf ("start, end ? ");
-    scanf ("%d %d", &start, &end);
+    printf("Enter start and end nodes: ");
+    scanf("%d %d", &start, &end);
+
     int list[50], clist[50], lcount = 0;
-    list[0] = start; clist[0] = 0; lcount = 1;
+    list[0] = start; 
+    clist[0] = 0; 
+    lcount = 1;
 
-    findpath (nodes, nodecount, start, end, list, clist, lcount);
+    // Find paths from start to end node
+    findPaths(nodes, node_count, start, end, list, clist, lcount);
 
-    printf("\nThe tringles are : \n");
+    printf("\nTriangles in the graph:\n");
 
-    triangle(nodes,path/2);
+    // Find and print triangles in the graph
+    findTriangles(nodes, path / 2);
 
-    //Ensuring tringle 
-
-    if(num_tringle==0)
-    {
-        printf("No tringle found\n");
+    // If no triangles are found, print a message
+    if (num_triangles == 0) {
+        printf("No triangles found.\n");
     }
 
     return 0;
